@@ -14,11 +14,10 @@ exports.findOneByIdAndUpdate = (cryptoId, updatedCryptoData) => Crypto.findByIdA
 
 exports.deleteOne = (cryptoId) => Crypto.findByIdAndDelete(cryptoId)
 
-exports.rent = async (houseId, userId) => {
-    const house = await House.findById(houseId)
-    house.availablePieces -= 1
-    house.rentedAHome.push(mongoose.Types.ObjectId(userId))
-    house.save()
+exports.buy = async (cryptoId, userId) => {
+    const crypto = await Crypto.findById(cryptoId)
+    crypto.boughtBy.push(mongoose.Types.ObjectId(userId))
+    crypto.save()
 }
 
 exports.getLastThree =async () => {

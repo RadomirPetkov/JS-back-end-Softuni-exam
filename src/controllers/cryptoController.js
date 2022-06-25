@@ -1,5 +1,5 @@
 const cryptoController = require(`express`).Router()
-const { createCrypto, getAll, getOneById, getOneDetailed, findOneByIdAndUpdate, deleteOne } = require(`../services/cryptoService`)
+const { createCrypto, getAll, getOneById, getOneDetailed, findOneByIdAndUpdate, deleteOne, buy } = require(`../services/cryptoService`)
 
 
 cryptoController.get(`/`, async (req, res) => {
@@ -31,9 +31,9 @@ cryptoController.get(`/details/:cryptoId`, async (req, res) => {
     const isOwner = ownerId == currentUser
 
     const isBoughtByUser = currentCryptoUnleaned.boughtBy.includes(currentUser)
-    // const tenants = currentHouse.rentedAHome.map(x=> x.name).join(`, `)
+    
 
-    res.render(`crypto/details`, { ...currentCrypto, isOwner })
+    res.render(`crypto/details`, { ...currentCrypto, isOwner, isBoughtByUser })
 })
 
 cryptoController.get(`/edit/:cryptoId`, async (req, res) => {
@@ -66,6 +66,20 @@ cryptoController.get(`/delete/:cryptoId`, async (req, res) => {
     }
 
 })
+
+cryptoController.get(`/buy/:cryptoId`, async (req, res)=>{
+    const cryptoId = req.params.cryptoId
+    const currentUserId = req.user._id
+    try {
+        await buy(cryptoId, currentUserId)
+        res.redirect(`/crypto/details/${cryptoId}`)
+    } catch (error) {
+        console.log(error);
+        
+    }
+    
+})
+
 
 
 module.exports = cryptoController
