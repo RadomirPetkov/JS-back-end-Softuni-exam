@@ -26,12 +26,12 @@ authController.post(`/register`, isGuest, async (req, res) => {
 
 })
 
-authController.get(`/login`, (req, res) => {
+authController.get(`/login`, isGuest, (req, res) => {
 
     res.render("auth/login")
 })
 
-authController.post(`/login`, async (req, res) => {
+authController.post(`/login`,isGuest, async (req, res) => {
     const { email, password } = req.body
     try {
         const user = await authService.login(email, password)
