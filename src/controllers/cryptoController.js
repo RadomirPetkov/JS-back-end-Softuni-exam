@@ -20,9 +20,14 @@ cryptoController.get(`/create`, isUser, (req, res) => {
 cryptoController.post(`/create`, isUser, async (req, res) => {
     try {
         const cryptoData = req.body
-        cryptoData.owner = req.user._id
-        await createCrypto(cryptoData)
-        res.redirect(`/crypto`)
+
+        if (cryptoData.price > 0) {
+            cryptoData.owner = req.user._id
+            await createCrypto(cryptoData)
+            res.redirect(`/crypto`)
+        } else {
+            res.render(`crypto/create`, {error: "Price must be higher than 0"})
+        }
     } catch (error) {
         res.render(`crypto/create`, { error })
     }
