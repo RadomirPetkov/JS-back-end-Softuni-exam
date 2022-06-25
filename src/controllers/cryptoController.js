@@ -15,7 +15,6 @@ cryptoController.post(`/create`, async (req, res) => {
     try {
         const cryptoData = req.body
         cryptoData.owner = req.user._id
-        console.log(cryptoData);
         await createCrypto(cryptoData)
         res.redirect(`/crypto`)
     } catch (error) {
