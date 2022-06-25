@@ -14,7 +14,7 @@ authController.post(`/register`, isGuest, async (req, res) => {
         return res.render(`auth/register`, { error: "Password doesnt match" })
     }
     if (password.length<5) {
-        return res.render(`auth/register`, { error: "Your password is too" })
+        return res.render(`auth/register`, { error: "Your password is too short" })
     }
     try {
         const user = await authService.register(username,email, password)

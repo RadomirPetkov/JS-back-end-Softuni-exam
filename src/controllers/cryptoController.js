@@ -4,8 +4,13 @@ const { isUser, isOwner, isUserButNotOwner } = require(`../middlewares/authMiddl
 
 
 cryptoController.get(`/`, async (req, res) => {
-    const crypto = await getAll().lean()
-    res.render(`crypto/catalog`, { crypto })
+    try {
+        const crypto = await getAll().lean()
+        res.render(`crypto/catalog`, { crypto })
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 
 cryptoController.get(`/create`, isUser, (req, res) => {
@@ -24,27 +29,37 @@ cryptoController.post(`/create`, isUser, async (req, res) => {
 })
 
 cryptoController.get(`/details/:cryptoId`, async (req, res) => {
-    const cryptoId = req.params.cryptoId
-    const currentCrypto = await getOneDetailed(cryptoId, "boughtBy").lean()
-    const currentCryptoUnleaned = await getOneById(cryptoId)
-    const ownerId = currentCrypto.owner
-    const currentUser = req.user?._id
-    const isOwner = ownerId == currentUser
+    try {
+        const cryptoId = req.params.cryptoId
+        const currentCrypto = await getOneDetailed(cryptoId, "boughtBy").lean()
+        const currentCryptoUnleaned = await getOneById(cryptoId)
+        const ownerId = currentCrypto.owner
+        const currentUser = req.user?._id
+        const isOwner = ownerId == currentUser
 
-    const isBoughtByUser = currentCryptoUnleaned.boughtBy.includes(currentUser)
+        const isBoughtByUser = currentCryptoUnleaned.boughtBy.includes(currentUser)
 
+        res.render(`crypto/details`, { ...currentCrypto, isOwner, isBoughtByUser })
+    } catch (error) {
+        res.render(`404`)
 
-    res.render(`crypto/details`, { ...currentCrypto, isOwner, isBoughtByUser })
+    }
+
 })
 
-cryptoController.get(`/edit/:cryptoId`,isUser, isOwner, async (req, res) => {
-    const cryptoId = req.params.cryptoId
-    const currentCrypto = await getOneById(cryptoId).lean()
-    currentCrypto[`${currentCrypto.paymentMethod}`] = true
-    res.render(`crypto/edit`, currentCrypto)
+cryptoController.get(`/edit/:cryptoId`, isUser, isOwner, async (req, res) => {
+    try {
+        const cryptoId = req.params.cryptoId
+        const currentCrypto = await getOneById(cryptoId).lean()
+        currentCrypto[`${currentCrypto.paymentMethod}`] = true
+        res.render(`crypto/edit`, currentCrypto)
+    } catch (error) {
+        res.render(`404`)
+    }
+
 })
 
-cryptoController.post(`/edit/:cryptoId`,isUser, isOwner, async (req, res) => {
+cryptoController.post(`/edit/:cryptoId`, isUser, isOwner, async (req, res) => {
     const updatedCryptoData = req.body
     const currentCryptoId = req.params.cryptoId
 
@@ -56,7 +71,7 @@ cryptoController.post(`/edit/:cryptoId`,isUser, isOwner, async (req, res) => {
     }
 })
 
-cryptoController.get(`/delete/:cryptoId`,isUser, isOwner, async (req, res) => {
+cryptoController.get(`/delete/:cryptoId`, isUser, isOwner, async (req, res) => {
     const cryptoId = req.params.cryptoId
     try {
         await deleteOne(cryptoId)
@@ -75,8 +90,7 @@ cryptoController.get(`/buy/:cryptoId`, isUser, isUserButNotOwner, async (req, re
         await buy(cryptoId, currentUserId)
         res.redirect(`/crypto/details/${cryptoId}`)
     } catch (error) {
-        console.log(error);
-
+        res.render(`404`)
     }
 
 })
