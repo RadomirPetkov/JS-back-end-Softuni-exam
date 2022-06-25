@@ -10,7 +10,7 @@ const cryptoSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: {
-            validator: /^https?:\/\//g,
+            validator: /^https:\/\//,
             message: "Image URLshould be a link"
         }
     },
