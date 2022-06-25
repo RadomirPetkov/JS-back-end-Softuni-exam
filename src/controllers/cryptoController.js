@@ -1,5 +1,5 @@
 const cryptoController = require(`express`).Router()
-const { createCrypto, getAll, getOneById, getOneDetailed, findOneByIdAndUpdate } = require(`../services/cryptoService`)
+const { createCrypto, getAll, getOneById, getOneDetailed, findOneByIdAndUpdate, deleteOne } = require(`../services/cryptoService`)
 
 
 cryptoController.get(`/`, async (req, res) => {
@@ -53,6 +53,18 @@ cryptoController.post(`/edit/:cryptoId`, async (req, res) => {
     } catch (error) {
         res.render(`crypto/edit`, { error })
     }
+})
+
+cryptoController.get(`/delete/:cryptoId`, async (req, res) => {
+    const cryptoId = req.params.cryptoId
+    try {
+        await deleteOne(cryptoId)
+        res.redirect(`/crypto`)
+
+    } catch (error) {
+        res.render(`404`, { error })
+    }
+
 })
 
 
