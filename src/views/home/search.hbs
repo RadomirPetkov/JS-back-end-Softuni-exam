@@ -1,0 +1,71 @@
+<main>
+    <section class="crypto-search">
+        <h1>Search</h1>
+
+        <form class="search-form" method="POST">
+            <input type="text" class="search-coin" name="searchedCoin" placeholder="Search here...">
+            <select id="payment" name="payment">
+                <option value="crypto-wallet">Crypto Wallet</option>
+                <option value="credit-card">Credit Card</option>
+                <option value="debit-card">Debit Card</option>
+                <option value="paypal">PayPal</option>
+            </select>
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+        {{#if cryptoes}}
+        {{#each cryptoes}}
+        <div class="search-result">
+            <div class="search-list">
+                <div class="coin">
+                    <div class="coin-img">
+                        <img src="{{image}}">
+                    </div>
+                    <div class="coin-info">
+                        <h1>{{name}}</h1>
+                        <p><span>Price: </span>${{price}}</p>
+                        <p><span>Payment: </span>{{paymentMethod}}</p>
+                    </div>
+
+                    <a href="/crypto/details/{{_id}}" class="btn-details">Details</a>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{!-- {{else}}
+        <div class="no-match">
+            <p>No match was found!</p>
+        </div> --}}
+
+        {{/if}}
+
+
+        {{#if foundCoins}}
+        {{#each foundCoins}}
+        <div class="search-result">
+            <div class="search-list">
+                <div class="coin">
+                    <div class="coin-img">
+                        <img src="{{image}}">
+                    </div>
+                    <div class="coin-info">
+                        <h1>{{name}}</h1>
+                        <p><span>Price: </span>${{price}}</p>
+                        <p><span>Payment: </span>{{paymentMethod}}</p>
+                    </div>
+
+                    <a href="/crypto/details/{{_id}}" class="btn-details">Details</a>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if matches}}
+        {{else}}
+        <div class="no-match">
+            <p>No match was found!</p>
+        </div>
+        {{/if}}
+
+    </section>
+</main>
