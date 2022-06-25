@@ -3,11 +3,16 @@ const mongoose = require(`mongoose`)
 const cryptoSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        minLength:2
     },
     image: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: /^https?:\/\//g,
+            message: "Image URLshould be a link"
+        }
     },
     price: {
         type: Number,
@@ -15,12 +20,13 @@ const cryptoSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: true
+        required: true,
+        minLength: 10
     },
     paymentMethod: {
         type: String,
         enum: ["crypto-wallet", "credit-card", "debit-card", "paypal"],
-        required: true
+        required: true,
     }, 
     boughtBy: [{
         type: mongoose.Types.ObjectId,
